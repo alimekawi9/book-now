@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book now</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 2rem auto; padding: 0 1rem; }
+    section { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    h2 { margin: 0 0 .5rem; font-size: 1rem; }
+    button { font-size: 1rem; padding: .6rem 1.2rem; }
+  </style>
+</head>
+<body>
+  <h1>Trip</h1>
+  <section><h2>Flight</h2><div id="flight">Loading…</div></section>
+  <section><h2>Hotel</h2><div id="hotel">Loading…</div></section>
+  <section><h2>Total</h2><div id="total">—</div></section>
+  <button id="book">Book now</button>
+  <p id="status"></p>
+  <script src="app.js"></script>
+</body>
+</html>
