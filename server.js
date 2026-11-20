@@ -1,4 +1,4 @@
-// Express app: serves /public and (later) the booking API.
+// Express app: serves /public and the booking API.
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
@@ -18,15 +18,36 @@ if (problems.length) {
 }
 
 const trip = require('./src/trip');
+const booking = require('./src/booking');
 
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Read-only: the page uses this to show the hard-coded trip.
-app.get('/api/trip', (req, res) => res.json(trip));
+// Read-only: the hard-coded trip, the made-up traveller to prefill the form, and any demo failure flags.
+app.get('/api/trip', (req, res) => res.json({ ...trip, demo: booking.demoFlags() }));
 
-// TODO: POST /api/book (not implemented yet)
+// Fresh flight offer + hotel rate (prebooked). Books nothing.
+app.get('/api/quote', async (req, res) => {
+  try {
+    res.json(await booking.createQuote());
+  } catch (err) {
+    console.error('quote failed:', err.message);
+    res.status(502).json({ error: 'quote_failed', message: err.message });
+  }
+});
+
+// Books flight + hotel for a quote. Body: { quoteId, traveller }.
+app.post('/api/book', async (req, res) => {
+  const { quoteId, traveller } = req.body || {};
+  try {
+    const result = await booking.book(quoteId, traveller);
+    res.status(result.http).json(result.body);
+  } catch (err) {
+    console.error('book crashed:', err);
+    res.status(500).json({ ok: false, error: 'internal_error', message: err.message });
+  }
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

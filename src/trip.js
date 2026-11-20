@@ -1,16 +1,9 @@
-// The hard-coded trip. One adult, one flight route, one hotel, matching dates.
-// Dates are computed so they are always at least 30 days from today.
-
-function isoDate(daysFromToday) {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() + daysFromToday);
-  return d.toISOString().slice(0, 10); // YYYY-MM-DD
-}
-
-const departureDate = isoDate(45); // >= 30 days out
+// The hard-coded trip. One adult, LHR->JFK, one hotel, fixed dates.
+// Dates are fixed (not computed) so a recording and the report show the same trip.
+const departureDate = '2026-12-26';
+const checkin = '2026-12-26'; // same-day arrival
+const checkout = '2026-12-29';
 const nights = 3;
-const checkin = departureDate; // hotel starts the day we land (same-day arrival, assumed)
-const checkout = isoDate(45 + nights);
 
 module.exports = {
   flight: {
@@ -20,14 +13,12 @@ module.exports = {
     cabinClass: 'economy',
   },
   hotel: {
-    // ASSUMPTION: replace with a real hotel id returned by the LiteAPI sandbox
-    // for New York. Verify with `npm run smoke` once your .env exists.
     hotelId: 'lp19c4c',
     checkin,
     checkout,
     nights,
     guestNationality: 'GB',
-    currency: 'USD',
+    currency: 'GBP',
   },
   // Made-up traveller. Not a real person.
   traveller: {
